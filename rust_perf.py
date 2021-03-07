@@ -1,0 +1,189 @@
+#!/usr/bin/python
+#
+# USAGE: rust_perf
+# This uses this tool, you needs enable tracing with: 
+# probe!(test, begin);
+# probe!(test, end);
+#
+# 8-Mar-2021   Weixing.Sun@Gmail.Com
+
+from __future__ import print_function
+from bcc import BPF, USDT
+from bcc.utils import printb
+import argparse, signal, sys, subprocess, time
+
+def usage():
+    print("USAGE: rust_perf -p pid  -b probe -i interval -d duration")
+    print("                 -n name")
+
+def process_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--interval', type=int, default=1,  help='interval', metavar='i')
+    parser.add_argument('-d', '--duration', type=int, default=10, help='duration', metavar='d')
+    parser.add_argument('-p', '--pid',      type=int, default=0,  help='pid',      metavar='p')
+    parser.add_argument('-n', '--name', type=str, default="", help='process name', metavar='n')
+    parser.add_argument('-b', '--probe',  type=str, default="", help='probe name', metavar='b')
+    args=parser.parse_args()
+    args.probe1 = args.probe+"__start"
+    args.probe2 = args.probe+"__end"
+    if len(args.name)>0:
+        try:
+            args.pid = int(subprocess.check_output(['pgrep', '-n', args.name]))
+        except:
+            print("Please start process %s first" % (args.name))
+            exit()
+    if (args.pid == 0) and (args.name == ""):
+        usage()
+        exit()
+    if len(args.name)==0:
+        args.name = "[%d]"%(args.pid)
+    return args
+    
+
+# load BPF program
+bpf_text = """
+#include <uapi/linux/ptrace.h>
+typedef struct ip_pid {
+    u64 ip;
+    u64 pid;
+} ip_pid_t;
+
+typedef struct hist_key {
+    ip_pid_t key;
+    u64 slot;
+} hist_key_t;
+
+BPF_HASH(start, u32);
+BPF_ARRAY(avg, u64, 2);
+STORAGE
+
+int trace_func_entry(struct pt_regs *ctx){
+    u64 pid_tgid = bpf_get_current_pid_tgid();
+    u32 pid = pid_tgid;
+    u32 tgid = pid_tgid >> 32;
+    u64 ts = bpf_ktime_get_ns();
+    FILTER
+    ENTRYSTORE
+    start.update(&pid, &ts);
+    return 0;
+}
+int trace_func_return(struct pt_regs *ctx){
+    u64 *tsp, delta;
+    u64 pid_tgid = bpf_get_current_pid_tgid();
+    u32 pid = pid_tgid;
+    u32 tgid = pid_tgid >> 32;
+    // calculate delta time
+    tsp = start.lookup(&pid);
+    if (tsp == 0) {
+        return 0;   // missed start
+    }
+    delta = bpf_ktime_get_ns() - *tsp;
+    start.delete(&pid);
+    u32 lat = 0;
+    u32 cnt = 1;
+    u64 *sum = avg.lookup(&lat);
+    if (sum) lock_xadd(sum, delta);
+    u64 *cnts = avg.lookup(&cnt);
+    if (cnts) lock_xadd(cnts, 1);
+    FACTOR
+    // store as histogram
+    STORE
+    return 0;
+}
+"""
+
+args = process_args()
+bpf_text = bpf_text.replace('FILTER', 'if (tgid != %d) { return 0; }' % args.pid)
+bpf_text = bpf_text.replace('FACTOR', 'delta /= 1000000;')
+label = "msecs"
+need_key = False
+if need_key:
+    bpf_text = bpf_text.replace('STORAGE', 'BPF_HASH(ipaddr, u32);\n' +
+        'BPF_HISTOGRAM(dist, hist_key_t);')
+    # stash the IP on entry, as on return it's kretprobe_trampoline:
+    bpf_text = bpf_text.replace('ENTRYSTORE',
+        'u64 ip = PT_REGS_IP(ctx); ipaddr.update(&pid, &ip);')
+    pid = '-1' if not library else 'tgid'
+    bpf_text = bpf_text.replace('STORE',
+        """
+    u64 ip, *ipp = ipaddr.lookup(&pid);
+    if (ipp) {
+        ip = *ipp;
+        hist_key_t key;
+        key.key.ip = ip;
+        key.key.pid = %s;
+        key.slot = bpf_log2l(delta);
+        dist.increment(key);
+        ipaddr.delete(&pid);
+    }
+        """ % pid)
+else:
+    bpf_text = bpf_text.replace('STORAGE', 'BPF_HISTOGRAM(dist);')
+    bpf_text = bpf_text.replace('ENTRYSTORE', '')
+    bpf_text = bpf_text.replace('STORE',
+        'dist.increment(bpf_log2l(delta));')
+
+# signal handler
+def signal_ignore(signal, frame):
+    print()
+
+#########################################################
+u = USDT(pid=args.pid)
+u.enable_probe(probe=args.probe1, fn_name="trace_func_entry")
+u.enable_probe(probe=args.probe2, fn_name="trace_func_return")
+
+debug = 0
+if debug:
+    print(u.get_text())
+    print(bpf_text)
+
+# initialize BPF
+b = BPF(text=bpf_text, usdt_contexts=[u])
+
+# header
+print("Tracing function %s.%s functions ... Hit Ctrl-C to end." % (args.name, args.probe))
+
+# output
+def print_section(key):
+    if not library:
+        return BPF.sym(key[0], -1)
+    else:
+        return "%s [%d]" % (BPF.sym(key[0], key[1]), key[1])
+
+exiting = 0
+seconds = 0
+dist = b.get_table("dist")
+while (1):
+    try:
+        time.sleep(args.interval)
+        seconds += args.interval
+    except KeyboardInterrupt:
+        exiting = 1
+        # as cleanup can take many seconds, trap Ctrl-C:
+        signal.signal(signal.SIGINT, signal_ignore)
+    if seconds >= args.duration:
+        exiting = 1
+
+    print()
+    print("%-8s\n" % time.strftime("%H:%M:%S"), end="")
+
+    if need_key:
+        dist.print_log2_hist(label, "Function", section_print_fn=print_section,
+            bucket_fn=lambda k: (k.ip, k.pid))
+    else:
+        dist.print_log2_hist(label)
+    dist.clear()
+
+    total  = b['avg'][0].value
+    counts = b['avg'][1].value
+    if counts > 0:
+        if label == 'msecs':
+            total /= 1000000
+        elif label == 'usecs':
+            total /= 1000
+        avg = total/counts
+        print("\navg = %ld %s, total: %ld %s, count: %ld\n" %(total/counts, label, total, label, counts))
+
+    if exiting:
+        print("Detaching...")
+        exit()
