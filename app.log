@@ -1,0 +1,170 @@
+[weixingsun@wsun test1]$ sudo python ../rust_perf.py -n test1 -i 1 -d 5 -b add
+Tracing function test1.add functions ... Hit Ctrl-C to end.
+
+16:23:31
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 332 msecs, count: 33
+
+
+16:23:32
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 665 msecs, count: 66
+
+
+16:23:33
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 999 msecs, count: 99
+
+
+16:23:34
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 1332 msecs, count: 132
+
+
+16:23:35
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 1675 msecs, count: 166
+
+Detaching...
+[weixingsun@wsun test1]$ sudo python ../rust_perf.py -n test1 -i 1 -d 5 -b sub
+Tracing function test1.sub functions ... Hit Ctrl-C to end.
+
+16:23:40
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 33       |****************************************|
+
+avg = 20 msecs, total: 663 msecs, count: 33
+
+
+16:23:41
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 33       |****************************************|
+
+avg = 20 msecs, total: 1326 msecs, count: 66
+
+
+16:23:42
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 33       |****************************************|
+
+avg = 20 msecs, total: 1989 msecs, count: 99
+
+
+16:23:43
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 34       |****************************************|
+
+avg = 20 msecs, total: 2672 msecs, count: 133
+
+
+16:23:44
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 33       |****************************************|
+
+avg = 20 msecs, total: 3335 msecs, count: 166
+
+Detaching...
+
+[weixingsun@wsun test1]$ sudo python ../rust_perf.py -p 5504 -i 1 -d 5 -b loop
+Tracing function [5504].loop functions ... Hit Ctrl-C to end.
+
+16:18:51
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 32       |****************************************|
+
+avg = 30 msecs, total: 966 msecs, count: 32
+
+
+16:18:52
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 33       |****************************************|
+
+avg = 30 msecs, total: 1962 msecs, count: 65
+
+
+16:18:53
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 33       |****************************************|
+
+avg = 30 msecs, total: 2988 msecs, count: 99
+
+
+16:18:54
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 34       |****************************************|
+
+avg = 30 msecs, total: 3985 msecs, count: 132
+
+
+16:18:55
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 0        |                                        |
+        16 -> 31         : 33       |****************************************|
+
+avg = 30 msecs, total: 4981 msecs, count: 165
+
+Detaching...
