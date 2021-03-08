@@ -22,9 +22,9 @@ use probe::probe;
 use std::{thread, time};
 
 fn add(a: u64, b: u64) -> u64 {
-    probe!(probe, add__start, a, b);                 // added for function entry
+    probe!(test1, add__start, a, b);                 // added for function entry
     thread::sleep(time::Duration::from_millis(10));
-    probe!(probe, add__end, a, b);                   // added for function exit
+    probe!(test1, add__end, a, b);                   // added for function exit
     return a+b;
 }
 ```
@@ -39,20 +39,20 @@ cargo build --release
 
 ```bash
 $ tplist -l target/release/test1
-b'target/release/test1' b'probe':b'add__start'
-b'target/release/test1' b'probe':b'add__end'
+b'target/release/test1' b'test1':b'add__start'
+b'target/release/test1' b'test1':b'add__end'
 
 $ readelf -n ./target/release/test1 | grep NT_STAPSDT -B2 -A4
 readelf: Warning: Gap in build notes detected from 0x518a to 0x35c0f
 Displaying notes found in: .note.stapsdt
   Owner                Data size 	Description
   stapsdt              0x00000039	NT_STAPSDT (SystemTap probe descriptors)
-    Provider: probe
+    Provider: test1
     Name: add__start
     Location: 0x00000000000051dc, Base: 0x000000000003aa41, Semaphore: 0x0000000000000000
     Arguments: -8@%r14 -8@%r12
   stapsdt              0x00000037	NT_STAPSDT (SystemTap probe descriptors)
-    Provider: probe
+    Provider: test1
     Name: add__end
     Location: 0x00000000000051e7, Base: 0x000000000003aa41, Semaphore: 0x0000000000000000
     Arguments: -8@%r14 -8@%r12
