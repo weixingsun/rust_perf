@@ -6,7 +6,7 @@ But USDT tracing is widely used in almost everywhere in performance measurement,
 
 Luckily we have a module [libprobe](https://github.com/cuviper/rust-libprobe) as a workaround
 
-# Preparation
+## Preparation
 
 Cargo.toml
 
@@ -29,13 +29,13 @@ fn add(a: u64, b: u64) -> u64 {
 }
 ```
 
-# Build
+## Build
 
 ```bash
 cargo build --release
 ```
 
-# Check
+## Check
 
 ```bash
 $ tplist -l target/release/test1
@@ -60,13 +60,13 @@ Displaying notes found in: .note.stapsdt
 ```
 
 
-# Run the target rust app
+## Run the target rust app
 
 ```bash
 target/release/test1 &
 ```
 
-# Run rust_perf tool
+## Run rust_perf tool
 
 ```bash
 $ sudo ./rust_perf -n test1 -b add -i 1 -d 2 
@@ -93,6 +93,6 @@ avg = 10 msecs, total: 665 msecs, count: 66
 
 
 ```
-# Why not just writing logs
+## Why not just writing logs
 
 For the light-weight apps may be straight forward, but for a high throughput system, dealing with every IO operation(disk/network) should be cautious
