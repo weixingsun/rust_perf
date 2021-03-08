@@ -98,6 +98,7 @@ BIN="test1"
 target/release/$BIN &
 sudo python ./rust_perf -n $BIN -i 1 -d 5 -b add > add.out &
 sudo python ./rust_perf -n $BIN -i 1 -d 5 -b sub > sub.out &
+sudo python ./rust_perf -n $BIN -i 1 -d 5 -b loop > loop.out &
 
 ```
 Throughput matrix (RPS)
