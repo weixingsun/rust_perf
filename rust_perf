@@ -49,7 +49,9 @@ def process_args():
         exit()
     else:
         args.probe_names = find_probe_name(args.pid, args.probe)
-
+        if len(args.probe_names)<2:
+            print("Cannot find probe names with %s*" % (args.probe))
+            exit()
     return args
     
 
