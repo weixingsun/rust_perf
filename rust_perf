@@ -25,7 +25,7 @@ def find_probe_name(pid,name):
         return probe_names.decode().rstrip().split('\n')
 
 def find_pid(name):
-    return int(subprocess.check_output(['pgrep', '-n', name]))
+    return int(subprocess.check_output(['pgrep', name]))
 
 def process_args():
     parser = argparse.ArgumentParser()
@@ -37,9 +37,11 @@ def process_args():
     args=parser.parse_args()
     if len(args.name)>0:
         try:
-            args.pid = int(subprocess.check_output(['pgrep', '-n', args.name]))
+            args.pid = find_pid(args.name)
+        except ValueError:
+            print("Found multiple pids of %s, change unique name or use pid instead" % (args.name))
         except:
-            print("Please start process %s first" % (args.name))
+            print("Cannot find pid with %s, please start it first or use pid instead" % (args.name))
             exit()
     if (args.pid == 0) and (args.name == ""):
         parser.print_help()
