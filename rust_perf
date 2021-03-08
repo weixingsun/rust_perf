@@ -54,6 +54,9 @@ def process_args():
         if len(args.probe_names)<2:
             print("Cannot find probe names with %s*" % (args.probe))
             exit()
+        elif len(args.probe_names)>2:
+            print("Find too many probe names with %s*" % (args.probe))
+            exit()
     return args
     
 
