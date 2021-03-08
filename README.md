@@ -100,6 +100,18 @@ sudo python ./rust_perf -n $BIN -i 1 -d 5 -b add > add.out &
 sudo python ./rust_perf -n $BIN -i 1 -d 5 -b sub > sub.out &
 
 ```
+Throughput matrix (RPS)
+```bash
+             fn_loop      fn_add       fn_sub
+16:23:31     33           99           49
+16:23:32     33           99           49
+```
+Latency matrix (ms)
+```bash
+             fn_loop      fn_add       fn_sub
+16:23:31     30           10           20
+16:23:32     30           10           20
+```
 
 ## Why not just writing logs
 
