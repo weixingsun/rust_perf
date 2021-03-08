@@ -10,11 +10,22 @@
 from __future__ import print_function
 from bcc import BPF, USDT
 from bcc.utils import printb
-import argparse, signal, sys, subprocess, time
+import argparse, os, signal, sys, subprocess, time
 
 def usage():
     print("USAGE: rust_perf -p pid  -b probe -i interval -d duration")
     print("                 -n name")
+
+def find_probe_name(pid,name):
+    # readelf -n `readlink -f /proc/$PID/exe` |grep $PROBE > probes.txt
+    exe_path = subprocess.check_output(['readlink', '-f', "/proc/%d/exe"%(pid)]).decode().rstrip()
+    cmd = ["/usr/bin/readelf -n "+exe_path+" | /bin/grep "+name+" | /bin/awk '{print $2}'"]
+    with open(os.devnull, 'w') as devnull:
+        probe_names = subprocess.check_output(cmd, shell=True, stderr=devnull)
+        return probe_names.decode().rstrip().split('\n')
+
+def find_pid(name):
+    return int(subprocess.check_output(['pgrep', '-n', name]))
 
 def process_args():
     parser = argparse.ArgumentParser()
@@ -24,8 +35,6 @@ def process_args():
     parser.add_argument('-n', '--name', type=str, default="", help='process name', metavar='n')
     parser.add_argument('-b', '--probe',  type=str, default="", help='probe name', metavar='b')
     args=parser.parse_args()
-    args.probe1 = args.probe+"__start"
-    args.probe2 = args.probe+"__end"
     if len(args.name)>0:
         try:
             args.pid = int(subprocess.check_output(['pgrep', '-n', args.name]))
@@ -33,10 +42,14 @@ def process_args():
             print("Please start process %s first" % (args.name))
             exit()
     if (args.pid == 0) and (args.name == ""):
-        usage()
+        parser.print_help()
         exit()
-    if len(args.name)==0:
-        args.name = "[%d]"%(args.pid)
+    if len(args.probe)==0:
+        parser.print_help()
+        exit()
+    else:
+        args.probe_names = find_probe_name(args.pid, args.probe)
+
     return args
     
 
@@ -129,8 +142,8 @@ def signal_ignore(signal, frame):
 
 #########################################################
 u = USDT(pid=args.pid)
-u.enable_probe(probe=args.probe1, fn_name="trace_func_entry")
-u.enable_probe(probe=args.probe2, fn_name="trace_func_return")
+u.enable_probe(probe=args.probe_names[0], fn_name="trace_func_entry")
+u.enable_probe(probe=args.probe_names[1], fn_name="trace_func_return")
 
 debug = 0
 if debug:
@@ -187,3 +200,4 @@ while (1):
     if exiting:
         print("Detaching...")
         exit()
+
