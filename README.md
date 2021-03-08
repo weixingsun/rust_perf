@@ -14,7 +14,7 @@ Cargo.toml
 [dependencies.probe]
 git = "https://github.com/cuviper/rust-libprobe.git"
 ```
-main.rs
+source code changes
 ```rust
 #![feature(asm)]
 
@@ -22,9 +22,9 @@ use probe::probe;
 use std::{thread, time};
 
 fn add(a: u64, b: u64) -> u64 {
-    probe!(probe, add__start, a, b);
+    probe!(probe, add__start, a, b);                 // added for function entry
     thread::sleep(time::Duration::from_millis(10));
-    probe!(probe, add__end, a, b);
+    probe!(probe, add__end, a, b);                   // added for function exit
     return a+b;
 }
 ```
