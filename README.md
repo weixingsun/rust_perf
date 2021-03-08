@@ -91,6 +91,15 @@ avg = 10 msecs, total: 332 msecs, count: 33
 
 avg = 10 msecs, total: 665 msecs, count: 66
 
+## Multiple tracing points
+
+```bash
+BIN="test1"
+target/release/$BIN &
+sudo python ./rust_perf -n $BIN -i 1 -d 5 -b add > add.out &
+sudo python ./rust_perf -n $BIN -i 1 -d 5 -b sub > sub.out &
+
+```
 
 ```
 ## Why not just writing logs
