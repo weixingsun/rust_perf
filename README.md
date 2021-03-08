@@ -90,7 +90,7 @@ avg = 10 msecs, total: 332 msecs, count: 33
          8 -> 15         : 33       |****************************************|
 
 avg = 10 msecs, total: 665 msecs, count: 66
-
+```
 ## Multiple tracing points
 
 ```bash
@@ -101,7 +101,6 @@ sudo python ./rust_perf -n $BIN -i 1 -d 5 -b sub > sub.out &
 
 ```
 
-```
 ## Why not just writing logs
 
 For the light-weight apps may be straight forward, but for a high throughput system, dealing with every IO operation(disk/network) should be cautious
