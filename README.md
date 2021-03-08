@@ -93,3 +93,6 @@ avg = 10 msecs, total: 665 msecs, count: 66
 
 
 ```
+# Why not just writing logs
+
+For the light-weight apps may be straight forward, but for a high throughput system, dealing with every IO operation(disk/network) should be cautious
