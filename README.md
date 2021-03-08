@@ -16,7 +16,7 @@ git = "https://github.com/cuviper/rust-libprobe.git"
 ```
 source code changes
 ```rust
-#![feature(asm)]
+#![feature(asm)]                                     // need asm lib
 
 use probe::probe;
 use std::{thread, time};
