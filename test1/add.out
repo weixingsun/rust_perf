@@ -1,0 +1,52 @@
+Tracing function test1.add functions ... Hit Ctrl-C to end.
+
+11:06:27
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 333 msecs, count: 33
+
+
+11:06:28
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 666 msecs, count: 66
+
+
+11:06:29
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 1000 msecs, count: 99
+
+
+11:06:30
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+
+avg = 10 msecs, total: 1333 msecs, count: 132
+
+
+11:06:31
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 34       |****************************************|
+
+avg = 10 msecs, total: 1677 msecs, count: 166
+
+Detaching...

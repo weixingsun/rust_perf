@@ -22,7 +22,8 @@ def find_probe_name(pid,name):
     cmd = ["/usr/bin/readelf -n "+exe_path+" | /bin/grep "+name+" | /bin/awk '{print $2}'"]
     with open(os.devnull, 'w') as devnull:
         probe_names = subprocess.check_output(cmd, shell=True, stderr=devnull)
-        return probe_names.decode().rstrip().split('\n')
+        probes_may_dup = probe_names.decode().rstrip().split('\n')
+        return list(set(probes_may_dup))
 
 def find_pid(name):
     return int(subprocess.check_output(['pgrep', name]))
@@ -40,6 +41,7 @@ def process_args():
             args.pid = find_pid(args.name)
         except ValueError:
             print("Found multiple pids of %s, change unique name or use pid instead" % (args.name))
+            exit()
         except:
             print("Cannot find pid with %s, please start it first or use pid instead" % (args.name))
             exit()
@@ -55,7 +57,8 @@ def process_args():
             print("Cannot find probe names with %s*" % (args.probe))
             exit()
         elif len(args.probe_names)>2:
-            print("Find too many probe names with %s*" % (args.probe))
+            print("Found too many probe names with %s*" % (args.probe))
+            print(args.probe_names)
             exit()
     return args
     

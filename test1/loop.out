@@ -1,0 +1,37 @@
+Tracing function test1.loop functions ... Hit Ctrl-C to end.
+
+11:06:27
+     msecs               : count     distribution
+         0 -> 1          : 33       |****************************************|
+
+avg = 0 msecs, total: 0 msecs, count: 33
+
+
+11:06:28
+     msecs               : count     distribution
+         0 -> 1          : 33       |****************************************|
+
+avg = 0 msecs, total: 0 msecs, count: 66
+
+
+11:06:29
+     msecs               : count     distribution
+         0 -> 1          : 34       |****************************************|
+
+avg = 0 msecs, total: 0 msecs, count: 100
+
+
+11:06:30
+     msecs               : count     distribution
+         0 -> 1          : 33       |****************************************|
+
+avg = 0 msecs, total: 0 msecs, count: 133
+
+
+11:06:31
+     msecs               : count     distribution
+         0 -> 1          : 33       |****************************************|
+
+avg = 0 msecs, total: 0 msecs, count: 166
+
+Detaching...
