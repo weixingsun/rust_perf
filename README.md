@@ -90,9 +90,30 @@ avg = 10 msecs, total: 332 msecs, count: 33
          8 -> 15         : 33       |****************************************|
 
 avg = 10 msecs, total: 665 msecs, count: 66
+```
+## Multiple tracing points
 
+```bash
+BIN="test1"
+target/release/$BIN &
+sudo python ./rust_perf -n $BIN -i 1 -d 5 -b add > add.out &
+sudo python ./rust_perf -n $BIN -i 1 -d 5 -b sub > sub.out &
+sudo python ./rust_perf -n $BIN -i 1 -d 5 -b loop > loop.out &
 
 ```
+Throughput matrix (RPS)
+```bash
+             fn_loop      fn_add       fn_sub
+16:23:31     33           99           49
+16:23:32     33           99           49
+```
+Latency matrix (ms)
+```bash
+             fn_loop      fn_add       fn_sub
+16:23:31     30           10           20
+16:23:32     30           10           20
+```
+
 ## Why not just writing logs
 
 For the light-weight apps may be straight forward, but for a high throughput system, dealing with every IO operation(disk/network) should be cautious
