@@ -1,6 +1,6 @@
 Tracing function test1.sleep functions ... Hit Ctrl-C to end.
 
-11:06:27
+11:21:07
      msecs               : count     distribution
          0 -> 1          : 0        |                                        |
          2 -> 3          : 0        |                                        |
@@ -11,18 +11,7 @@ Tracing function test1.sleep functions ... Hit Ctrl-C to end.
 avg = 15 msecs, total: 976 msecs, count: 65
 
 
-11:06:28
-     msecs               : count     distribution
-         0 -> 1          : 0        |                                        |
-         2 -> 3          : 0        |                                        |
-         4 -> 7          : 0        |                                        |
-         8 -> 15         : 33       |****************************************|
-        16 -> 31         : 33       |****************************************|
-
-avg = 15 msecs, total: 1972 msecs, count: 131
-
-
-11:06:29
+11:21:08
      msecs               : count     distribution
          0 -> 1          : 0        |                                        |
          2 -> 3          : 0        |                                        |
@@ -30,10 +19,10 @@ avg = 15 msecs, total: 1972 msecs, count: 131
          8 -> 15         : 33       |**************************************  |
         16 -> 31         : 34       |****************************************|
 
-avg = 15 msecs, total: 2989 msecs, count: 198
+avg = 15 msecs, total: 1992 msecs, count: 132
 
 
-11:06:30
+11:21:09
      msecs               : count     distribution
          0 -> 1          : 0        |                                        |
          2 -> 3          : 0        |                                        |
@@ -41,10 +30,10 @@ avg = 15 msecs, total: 2989 msecs, count: 198
          8 -> 15         : 33       |****************************************|
         16 -> 31         : 33       |****************************************|
 
-avg = 15 msecs, total: 3986 msecs, count: 264
+avg = 15 msecs, total: 2998 msecs, count: 199
 
 
-11:06:31
+11:21:10
      msecs               : count     distribution
          0 -> 1          : 0        |                                        |
          2 -> 3          : 0        |                                        |
@@ -52,6 +41,17 @@ avg = 15 msecs, total: 3986 msecs, count: 264
          8 -> 15         : 34       |****************************************|
         16 -> 31         : 33       |**************************************  |
 
-avg = 15 msecs, total: 4993 msecs, count: 331
+avg = 15 msecs, total: 3995 msecs, count: 265
+
+
+11:21:11
+     msecs               : count     distribution
+         0 -> 1          : 0        |                                        |
+         2 -> 3          : 0        |                                        |
+         4 -> 7          : 0        |                                        |
+         8 -> 15         : 33       |****************************************|
+        16 -> 31         : 33       |****************************************|
+
+avg = 15 msecs, total: 4991 msecs, count: 331
 
 Detaching...
